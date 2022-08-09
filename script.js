@@ -19,16 +19,16 @@ const createProductItemElement = ({ sku, name, image }) => {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  const botao = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  botao.addEventListener('click', random);
+  section.appendChild(botao);
 
   return section;
 };
 
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
-const cartItemClickListener = (event) => {
-  // coloque seu código aqui  
-};
+const cartItemClickListener = (event) => event.target.remove();
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
@@ -47,6 +47,15 @@ const products = async () => {
     const produtos = createProductItemElement({ sku, name, image });
     itens.appendChild(produtos);
   });
+};
+const catchId = (item) => item.querySelector('span.item__sku').innerText;
+const random = async (element) => {
+  const event = await catchId(element.target.parentElement);
+  const result = await fetchItem(event);
+  const destruct = { sku: result.id, name: result.title, salePrice: result.price };
+  const card = createCartItemElement(destruct);
+  const felipe = document.querySelector('.cart__items');
+  felipe.appendChild(card);
 };
 
 window.onload = () => {
